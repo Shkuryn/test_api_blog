@@ -55,8 +55,8 @@ module Api
           "SELECT articles.id,
                  articles.header,
                  CASE
-        WHEN Bit_length(articles.body) > 8 THEN Substring(articles.body FROM 1
-        FOR 12)
+        WHEN Bit_length(articles.body) > 500 THEN Substring(articles.body FROM 1
+        FOR 100)
         || '...'
         ELSE articles.body
       end           AS body,
