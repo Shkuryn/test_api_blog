@@ -5,12 +5,20 @@ module Api
 
       # GET /articles
       def index
-        @articles = Article.find_by_sql(get_query_text)
-        render json: @articles
+        @par = {}
+        @par.store('user_id', params[:author].to_i)  if params[:author]
+        @par.store('category', params[:category])  if params[:category]
+        if @par.size == 0
+          @articles = Article.find_by_sql(get_query_text)
+        else
+          @articles = Article.filter(@par)
+        end
+         render json: @articles
       end
 
       # GET /articles/1
       def show
+        @article = Article.by_article_id(params[:id]).first
         render json: @article
       end
 
