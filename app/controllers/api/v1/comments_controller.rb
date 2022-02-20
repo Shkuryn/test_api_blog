@@ -1,6 +1,13 @@
 module Api
   module V1
     class CommentsController < ApplicationController
+      # GET /comments
+         def index
+           if params[:article_id]
+             @comments = Comment.with_article(params[:article_id])
+             render json: @comments
+           end
+         end
     end
   end
 end
@@ -9,12 +16,7 @@ end
 # class CommentsController < ApplicationController
 #   before_action :set_comment, only: [:show, :update, :destroy]
 #
-#   # GET /comments
-#   def index
-#     @comments = Comment.all
 #
-#     render json: @comments
-#   end
 #
 #   # GET /comments/1
 #   def show
