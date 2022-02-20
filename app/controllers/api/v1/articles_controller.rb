@@ -5,32 +5,9 @@ module Api
 
       # GET /articles
       def index
-        #@articles = Article.all.order("created_at DESC")
         @articles = Article.find_by_sql(get_query_text)
-        # debugger
-        # @articles = truncate_body @articles
         render json: @articles
       end
-
-       private
-      def  get_query_text
-        sql =
-          "SELECT articles.id,
-                 articles.header,
-                 CASE
-        WHEN Bit_length(articles.body) > 8 THEN Substring(articles.body FROM 1
-        FOR 12)
-        || '...'
-        ELSE articles.body
-      end           AS body,
-                       articles.created_at,
-                       Count(c.body) AS comments_count
-      FROM   articles
-      LEFT JOIN comments c
-      ON articles.id = c.article_id
-      GROUP  BY articles.id
-      ORDER  BY created_at DESC"
-    end
 
       # GET /articles/1
       def show
@@ -71,6 +48,25 @@ module Api
       # Only allow a list of trusted parameters through.
       def article_params
         params.fetch(:article, {})
+      end
+
+      def  get_query_text
+        sql =
+          "SELECT articles.id,
+                 articles.header,
+                 CASE
+        WHEN Bit_length(articles.body) > 8 THEN Substring(articles.body FROM 1
+        FOR 12)
+        || '...'
+        ELSE articles.body
+      end           AS body,
+                       articles.created_at,
+                       Count(c.body) AS comments_count
+      FROM   articles
+      LEFT JOIN comments c
+      ON articles.id = c.article_id
+      GROUP  BY articles.id
+      ORDER  BY created_at DESC"
       end
 
     end
