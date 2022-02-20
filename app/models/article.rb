@@ -5,8 +5,8 @@ class Article < ApplicationRecord
   validates :body,   presence: true
   validates :user_id, presence: true
   scope :by_article_id, ->(id) { where(id: id).pluck(:id, :header, :body, :category, :created_at) }
-  scope :with_users,    ->(user_id) { where('user_id = ?', user_id) }
-  scope :with_category, ->(category) { where('category = ?', category) }
+  scope :with_users,    ->(user_id) { where('user_id = ?', user_id).order(created_at: :desc) }
+  scope :with_category, ->(category) { where('category = ?', category).order(created_at: :desc) }
   def self.filter(params)
     articles = Article.all
     articles = articles.with_users(params['user_id']) if params['user_id'].present?
